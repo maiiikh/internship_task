@@ -1,1 +1,74 @@
-edit me 
+1. Problem Analysis:**
+
+The task was to diagnose the issue where the service at `internal.example.com` is unreachable, and users are receiving the "Host not found" error, even though the service is up and running.
+
+2. DNS Resolution Check:
+
+- When attempting to resolve `internal.example.com` to an IP address using the `dig` tool, the result was as follows:
+  
+```bash
+<<>> DiG 9.18.30-0ubuntu0.24.04.2-Ubuntu <<>> internal.example.com
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NXDOMAIN, id: 59584
+;; flags: qr rd ra; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 1
+```
+
+- **Result**: `NXDOMAIN` indicates that DNS could not resolve `internal.example.com` to an IP address, suggesting an issue with DNS configuration.
+
+3. Service Reachability Check:
+
+- After modifying the `/etc/hosts` file to manually resolve the domain name, I was able to get an IP. However, when trying to ping or curl to the IP address, I received the following result:
+
+```bash
+From 192.168.1.4 icmp_seq=3 Destination Host Unreachable
+```
+
+- result: The IP address was reachable, but the service was not accessible (`Destination Host Unreachable`), indicating a network issue.
+
+---
+
+Possible Causes of the Issue**:
+
+1. DNS Issue:
+   - The DNS server might not be configured correctly on the server.
+   - There could be an issue with the DNS record setup.
+
+2. Network Issue:
+   - The IP address of the server might be incorrect.
+   - The service on the server might be down or unreachable.
+   - There could be a firewall blocking access to the service.
+   - There might be a routing or network configuration problem.
+
+---
+
+Proposed Fixes:
+
+1.Fixing the DNS Issue:
+
+- Steps to confirm the root cause**: Check if the DNS records are set up correctly on the server using tools like `nslookup` or `dig`.
+  
+- Commands to fix:
+  - Check and edit the `/etc/resolv.conf` file to ensure correct DNS servers are set:
+  ```bash
+  sudo nano /etc/resolv.conf
+  ```
+  - Add a valid DNS server, for example, Google's DNS (`8.8.8.8`):
+  ```
+  nameserver 8.8.8.8
+  ```
+
+2.Fixing the Network Issue:
+
+- steps to confirm the root cause**: Ensure that the server is running and that no firewall is blocking access. Test connectivity using tools like `telnet` or `ss`.
+  
+- Commands to fix:
+  - Use `telnet` to test connectivity to the service on port 80:
+  ```bash
+  telnet <IP_ADDRESS> 80
+  ```
+  - Check if the service is running on the expected IP:
+  ```bash
+  ss -tuln | grep 80
+
+
