@@ -21,7 +21,16 @@ The task was to diagnose the issue where the service at `internal.example.com` i
 - After modifying the `/etc/hosts` file to manually resolve the domain name, I was able to get an IP. However, when trying to ping or curl to the IP address, I received the following result:
 
 ```bash
-From 192.168.1.4 icmp_seq=3 Destination Host Unreachable
+ING 127.0.0.2 (127.0.0.2) 56(84) bytes of data.
+64 bytes from 127.0.0.2: icmp_seq=1 ttl=64 time=0.136 ms
+64 bytes from 127.0.0.2: icmp_seq=2 ttl=64 time=0.030 ms
+64 bytes from 127.0.0.2: icmp_seq=3 ttl=64 time=0.038 ms
+64 bytes from 127.0.0.2: icmp_seq=4 ttl=64 time=0.030 ms
+
+--- 127.0.0.2 ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3067ms
+rtt min/avg/max/mdev = 0.030/0.058/0.136/0.044 ms
+
 ```
 
 - result: The IP address was reachable, but the service was not accessible (`Destination Host Unreachable`), indicating a network issue.
