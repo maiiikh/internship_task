@@ -1,0 +1,31 @@
+#Breakdown of how my script works:
+
+-First, I check if the user asked for help (--help).
+
+-I use getopts to read options -n and -v.
+
+-After options are handled, I read the search_string and filename.
+
+-I check if the file exists.
+
+-I read the file line by line.
+
+-I check if each line matches the search string, case-insensitively.
+
+-If -v is given, I invert the result.
+
+-If -n is given, I add the line number before the line.
+
+-I print the matching lines.
+
+If I wanted to add regex support or -c, -l:
+
+I would use internal grep commands.
+
+I would build a string of options like grep_options.
+
+Then call grep $grep_options "$search_string" "$filename".
+
+#Hardest part:
+
+Handling inverted match was difficult because Bash doesn't have easy true/false flipping.
